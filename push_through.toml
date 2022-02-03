@@ -1,0 +1,7 @@
+address = "::1"
+port = 8000
+
+[[deployments]]
+repository = "https://github.com/teiesti/push_through.git"
+path = "../push_through.demo"
+hook = "/update"
