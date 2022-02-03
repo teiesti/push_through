@@ -1,5 +1,4 @@
-address = "::1"
-port = 8000
+socket = "[::1]:8080"
 
 [[deployments]]
 repository = "https://github.com/teiesti/push_through.git"

@@ -6,7 +6,7 @@ use {
     std::{
         env,
         fs::read_to_string,
-        net::IpAddr,
+        net::SocketAddr,
         ops::Deref,
         path::{Path, PathBuf},
     },
@@ -21,8 +21,7 @@ const FILE_NAME: &str = formatcp!("{}.toml", crate::PKG_NAME);
 
 #[derive(Debug, Deserialize)]
 pub(crate) struct Configuration {
-    address: IpAddr,
-    port: u32,
+    socket: SocketAddr,
     deployments: Vec<Deployment>,
 }
 
