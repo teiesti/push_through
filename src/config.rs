@@ -72,4 +72,8 @@ impl Configuration {
 
         Ok(config)
     }
+
+    pub(crate) fn socket(&self) -> &SocketAddr {
+        &self.socket
+    }
 }
