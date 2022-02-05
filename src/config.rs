@@ -4,6 +4,7 @@ use {
     log::{info, trace},
     serde::Deserialize,
     std::{
+        collections::HashMap,
         env,
         fs::read_to_string,
         net::SocketAddr,
@@ -25,7 +26,7 @@ pub(crate) struct Configuration {
     deployments: Vec<Deployment>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub(crate) struct Deployment {
     repository: String,
     key: Option<PathBuf>,
@@ -75,5 +76,16 @@ impl Configuration {
 
     pub(crate) fn socket(&self) -> &SocketAddr {
         &self.socket
+    }
+
+    pub(crate) fn hooked_deployments(&self) -> Result<HashMap<String, Deployment>> {
+        let mut result = HashMap::with_capacity(self.deployments.len());
+        for deployment in &self.deployments {
+            let hook = deployment.hook.clone();
+            if let Some(_) = result.insert(hook, deployment.clone()) {
+                bail!("The hook {} is not unique", deployment.hook);
+            }
+        }
+        Ok(result)
     }
 }

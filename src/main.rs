@@ -7,7 +7,7 @@ use {
     env_logger::Env,
     hyper::{service::make_service_fn, Server},
     log::{error, info},
-    std::convert::Infallible,
+    std::{convert::Infallible, sync::Arc},
 };
 
 const PKG_NAME: &str = env!("CARGO_PKG_NAME");
@@ -31,13 +31,15 @@ async fn try_main() -> Result<()> {
 
     // Load the configuration
     let configuration = Configuration::discover()?;
+    let deployments = Arc::new(configuration.hooked_deployments()?);
 
     // Start the HTTP server
     info!("Starting the HTTP server");
     let server = Server::try_bind(configuration.socket())
         .with_context(|| format!("Could not bind to http://{}", configuration.socket()))?
-        .serve(make_service_fn(|_| async {
-            Ok::<_, Infallible>(PushThrough {})
+        .serve(make_service_fn(|_| {
+            let deployments_clone = deployments.clone();
+            async move { Ok::<_, Infallible>(PushThrough::for_deployments(deployments_clone)) }
         }));
 
     info!("Listening to http://{}", configuration.socket());
