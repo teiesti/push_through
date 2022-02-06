@@ -3,6 +3,7 @@ use {
     anyhow::{bail, Context, Result},
     const_format::formatcp,
     log::{info, trace},
+    rocket::Route,
     serde::Deserialize,
     std::{env, fs::read_to_string, ops::Deref, path::Path},
 };
@@ -57,5 +58,12 @@ impl Configuration {
             .with_context(|| format!("Could not decode {}", path.display()))?;
 
         Ok(config)
+    }
+
+    pub(crate) fn into_routes(self) -> Vec<Route> {
+        self.deployments
+            .into_iter()
+            .map(Deployment::into_route)
+            .collect()
     }
 }
