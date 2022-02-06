@@ -5,7 +5,7 @@ use {
     log::{info, trace},
     rocket::Route,
     serde::Deserialize,
-    std::{env, fs::read_to_string, ops::Deref, path::Path},
+    std::{env, fs::read_to_string, net::SocketAddr, ops::Deref, path::Path},
 };
 
 const SEARCH_PATHS: &[&str] = &[
@@ -17,6 +17,7 @@ const FILE_NAME: &str = formatcp!("{}.toml", crate::PKG_NAME);
 
 #[derive(Debug, Deserialize)]
 pub(crate) struct Configuration {
+    pub(crate) socket: SocketAddr,
     deployments: Vec<Deployment>,
 }
 

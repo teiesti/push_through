@@ -1,3 +1,5 @@
+socket = "[::1]:8000"
+
 [[deployments]]
 repo = "https://github.com/teiesti/push_through.git"
 path = "../push_through.demo"

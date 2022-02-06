@@ -3,7 +3,7 @@ mod deploy;
 
 use {
     crate::config::Configuration,
-    anyhow::{Error, Result},
+    anyhow::{Context, Error, Result},
     env_logger::Env,
     log::{error, info},
 };
@@ -31,11 +31,19 @@ async fn try_main() -> Result<()> {
     let configuration = Configuration::discover()?;
 
     // Start the HTTP server
-    info!("Starting the HTTP server");
-    rocket::build() // TODO: custom configuration
-        .mount("/", configuration.into_routes())
-        .launch()
-        .await;
+    info!(
+        "Starting the HTTP server at http://{}",
+        configuration.socket
+    );
+    rocket::custom(rocket::Config {
+        address: configuration.socket.ip(),
+        port: configuration.socket.port(),
+        ..rocket::Config::default()
+    })
+    .mount("/", configuration.into_routes())
+    .launch()
+    .await
+    .context("Error while running the HTTP server")?;
 
     Ok(())
 }
