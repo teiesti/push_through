@@ -1,7 +1,6 @@
-use {
-    env_logger::Env,
-    log::info,
-};
+mod deploy;
+
+use {env_logger::Env, log::info};
 
 const PKG_NAME: &str = env!("CARGO_PKG_NAME");
 const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
