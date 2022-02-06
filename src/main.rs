@@ -5,8 +5,7 @@ use {
     crate::config::Configuration,
     anyhow::{Error, Result},
     env_logger::Env,
-    log::error,
-    log::info,
+    log::{error, info},
 };
 
 const PKG_NAME: &str = env!("CARGO_PKG_NAME");
